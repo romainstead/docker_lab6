@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-deployment
+  labels:
+    app: app-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-pd
+  template:
+    metadata:
+      labels:
+       app: app-pd
+    spec:
+      containers:
+      - name: app
+        image: app:latest
+        imagePullPolicy: Never # нам нужен локальный образ, нельзя обращаться в регистр докера
+        ports:
+        - containerPort: 8000
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8000
+          failureThreshold: 12
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 0
+          periodSeconds: 10
+

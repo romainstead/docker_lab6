@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment # имя объекта в кластере (должно быть уникальным)
+  labels:
+    app: redis-deployment
+spec:
+  replicas: 1 # одна реплика приложения
+  selector:
+    matchLabels:
+      app: redis-pd # по этой метке деплоймент ищет поды
+  template:
+    metadata:
+      labels:
+       app: redis-pd
+    spec:
+      containers:
+      - name: redis
+        image: redis:latest # официальный образ редис с докерхаб
+        ports:
+        - containerPort: 6379
+        startupProbe:
+          exec:
+            command: [ "redis-cli", "ping" ]
+          failureThreshold: 30
+          periodSeconds: 5
+        readinessProbe:
+          exec:
+            command: [ "redis-cli", "ping" ]
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          exec:
+            command: [ "redis-cli", "ping" ]
+          initialDelaySeconds: 15
+          periodSeconds: 20

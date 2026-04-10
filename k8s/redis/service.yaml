@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis # имя сервиса в кластере и DNS имя внутри кластера
+spec:
+  selector:
+    app: redis-pd # селектор для внутреннего использования кубернетисом
+  ports:
+  - port: 6379 # порт самого сервиса ClusterIP
+    targetPort: 6379 # порт внутри контейнера редис, туда проксируется трафик

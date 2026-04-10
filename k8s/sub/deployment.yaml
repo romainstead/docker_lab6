@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sub-deployment
+  labels:
+    app: sub-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sub-pd
+  template:
+    metadata:
+      labels:
+       app: sub-pd
+    spec:
+      containers:
+      - name: sub
+        image: sub:latest
+        imagePullPolicy: Never
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds:
+          periodSeconds:
+          failureThreshold: 12
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 0
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 0
+          periodSeconds: 10
