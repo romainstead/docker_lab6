@@ -23,18 +23,18 @@ spec:
         startupProbe:
           httpGet:
             path: /
-            port: 8000
+            port: 80
           failureThreshold: 12
         readinessProbe:
           httpGet:
             path: /
-            port: 8000
+            port: 80
           initialDelaySeconds: 0
           periodSeconds: 5
         livenessProbe:
           httpGet:
             path: /
-            port: 8000
+            port: 80
           initialDelaySeconds: 0
           periodSeconds: 10
 
